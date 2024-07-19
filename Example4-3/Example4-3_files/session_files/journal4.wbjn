@@ -1,0 +1,16 @@
+# encoding: utf-8
+# 2021 R1
+SetScriptVersion(Version="21.1.216")
+system1 = GetSystem(Name="ACP-Pre")
+setup1 = system1.GetContainer(ComponentName="Setup")
+setup1.StartACP(ACPMode="pre")
+system2 = GetSystem(Name="SYS")
+results1 = system2.GetContainer(ComponentName="Results")
+results1.Edit()
+system3 = GetSystem(Name="ACP-Post")
+results2 = system3.GetContainer(ComponentName="Results")
+results2.StartACP(ACPMode="post")
+model1 = system2.GetContainer(ComponentName="Model")
+model1.Exit()
+setup1.ExitACP(Save=True)
+results2.ExitACP(Save=True)

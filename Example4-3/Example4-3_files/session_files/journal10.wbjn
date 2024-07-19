@@ -1,0 +1,97 @@
+# encoding: utf-8
+# 2021 R1
+SetScriptVersion(Version="21.1.216")
+system1 = GetSystem(Name="ACP-Pre")
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+material1 = engineeringData1.GetMaterial(Name="Epoxy Carbon UD (230 GPa) Prepreg")
+matlProp1 = material1.GetProperty(Name="Elasticity")
+matlProp1.SetVariableProperty(
+    VariableName="Young's Modulus X direction",
+    Property="Unit",
+    Value="GPa")
+matlProp1.SetData(
+    Variables=["Young's Modulus X direction"],
+    Values=[["181 [GPa]"]])
+matlProp1.SetData(
+    Variables=["Young's Modulus X direction"],
+    Values=[["53.78 [GPa]"]])
+matlProp1.SetVariableProperty(
+    VariableName="Young's Modulus Y direction",
+    Property="Unit",
+    Value="GPa")
+matlProp1.SetData(
+    Variables=["Young's Modulus Y direction"],
+    Values=[["10.3 [GPa]"]])
+matlProp1.SetData(
+    Variables=["Young's Modulus Y direction"],
+    Values=[["117.93 [GPa]"]])
+matlProp1.SetData(
+    Variables=["Poisson's Ratio XY"],
+    Values=[["25"]])
+matlProp1.SetData(
+    Variables=["Poisson's Ratio XY"],
+    Values=[["0.25"]])
+matlProp1.SetVariableProperty(
+    VariableName="Shear Modulus XY",
+    Property="Unit",
+    Value="GPa")
+matlProp1.SetData(
+    Variables=["Shear Modulus XY"],
+    Values=[["7.1700000000000008 [GPa]"]])
+matlProp1.SetData(
+    Variables=["Shear Modulus XY"],
+    Values=[["8.62 [GPa]"]])
+geometry1 = system1.GetContainer(ComponentName="Geometry")
+geometry1.Edit()
+geometry1.Exit()
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+model1.Exit()
+Update()
+designPoint1 = Parameters.GetDesignPoint(Name="0")
+Parameters.SetDesignPointsOutOfDate(DesignPoints=[designPoint1])
+Parameters.SetDesignPointsOutOfDate(DesignPoints=[designPoint1])
+setup1 = system1.GetContainer(ComponentName="Setup")
+setup1.StartACP(ACPMode="pre")
+Parameters.SetDesignPointsOutOfDate()
+system2 = GetSystem(Name="ACP-Post")
+results1 = system2.GetContainer(ComponentName="Results")
+system3 = GetSystem(Name="SYS")
+model2 = system3.GetContainer(ComponentName="Model")
+setup2 = system3.GetContainer(ComponentName="Setup")
+solution1 = system3.GetContainer(ComponentName="Solution")
+results2 = system3.GetContainer(ComponentName="Results")
+Parameters.SetRetainedDesignPointDataInvalid(InvalidContainers=[engineeringData1, geometry1, model1, results1, setup1, model2, setup2, solution1, results2])
+setupComponent1 = system1.GetComponent(Name="Setup")
+modelComponent2 = system3.GetComponent(Name="Model")
+setupComponent2 = system3.GetComponent(Name="Setup")
+solutionComponent1 = system3.GetComponent(Name="Solution")
+resultsComponent1 = system3.GetComponent(Name="Results")
+resultsComponent2 = system2.GetComponent(Name="Results")
+MarkComponentsOutOfDateForDps(Components=[setupComponent1, modelComponent2, setupComponent2, solutionComponent1, resultsComponent1, resultsComponent2])
+Parameters.SetPartiallyRetainedDataInvalid(Containers=[setup1, model2, setup2, solution1, results2, results1])
+setup1.ExitACP(Save=True)
+Update()
+Parameters.SetDesignPointsOutOfDate(DesignPoints=[designPoint1])
+Parameters.SetDesignPointsOutOfDate(DesignPoints=[designPoint1])
+model2.Edit()
+model2.Exit()
+Update()
+Parameters.SetDesignPointsOutOfDate(DesignPoints=[designPoint1])
+results1.StartACP(ACPMode="post")
+Parameters.SetDesignPointsOutOfDate()
+Parameters.SetRetainedDesignPointDataInvalid(InvalidContainers=[engineeringData1, geometry1, model1, results1, setup1])
+MarkComponentsOutOfDateForDps(Components=[resultsComponent2])
+Parameters.SetPartiallyRetainedDataInvalid(Containers=[results1])
+results1.ExitACP(Save=True)
+Update()
+Parameters.SetDesignPointsOutOfDate(DesignPoints=[designPoint1])
+results1.StartACP(ACPMode="post")
+solution1.Edit()
+Update()
+Parameters.SetDesignPointsOutOfDate(DesignPoints=[designPoint1])
+results1.ExitACP(Save=True)
+setup2.Edit()
+Save(Overwrite=True)
